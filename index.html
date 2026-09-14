@@ -1,0 +1,551 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>32TEAM — Отправить товар</title>
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&display=swap');
+
+*{box-sizing:border-box;margin:0;padding:0}
+
+:root{
+    --bg:#080a09;
+    --panel:#0d110e;
+    --panel2:#111711;
+    --line:#263226;
+    --green:#b7ff75;
+    --green2:#6dff4f;
+    --text:#d9e7d5;
+    --muted:#71806e;
+    --red:#ff6868;
+}
+
+html{scroll-behavior:smooth}
+
+body{
+    min-height:100vh;
+    padding:35px 15px 60px;
+    color:var(--text);
+    background:
+        linear-gradient(rgba(183,255,117,.025) 1px,transparent 1px),
+        linear-gradient(90deg,rgba(183,255,117,.025) 1px,transparent 1px),
+        radial-gradient(circle at 50% 0%,#162016 0%,#080a09 55%);
+    background-size:20px 20px,20px 20px,100% 100%;
+    font-family:'VT323',monospace;
+    overflow-x:hidden;
+}
+
+body:before{
+    content:"";
+    position:fixed;
+    inset:0;
+    pointer-events:none;
+    z-index:999;
+    background:repeating-linear-gradient(
+        0deg,
+        rgba(255,255,255,.018) 0px,
+        rgba(255,255,255,.018) 1px,
+        transparent 1px,
+        transparent 4px
+    );
+}
+
+body:after{
+    content:"";
+    position:fixed;
+    inset:0;
+    pointer-events:none;
+    box-shadow:inset 0 0 120px rgba(0,0,0,.85);
+    z-index:998;
+}
+
+.wrap{
+    width:100%;
+    max-width:650px;
+    margin:auto;
+    position:relative;
+    z-index:2;
+}
+
+.head{text-align:center;margin-bottom:25px}
+
+.logo{
+    display:inline-block;
+    color:var(--green);
+    font-family:'Press Start 2P',monospace;
+    font-size:11px;
+    letter-spacing:2px;
+    border:2px solid var(--green);
+    padding:9px 12px;
+    margin-bottom:18px;
+    box-shadow:4px 4px 0 #253623,0 0 20px rgba(183,255,117,.08);
+}
+
+.head h1{
+    font-family:'Press Start 2P',monospace;
+    font-size:22px;
+    line-height:1.7;
+    color:#e7f5e1;
+    text-shadow:3px 3px 0 #263326;
+}
+
+.head p{
+    color:var(--muted);
+    font-size:22px;
+    margin-top:5px;
+}
+
+.card{
+    position:relative;
+    background:
+        linear-gradient(135deg,rgba(183,255,117,.025),transparent 35%),
+        var(--panel);
+    border:2px solid var(--line);
+    padding:27px;
+    box-shadow:8px 8px 0 #030403,0 0 0 1px #030403;
+}
+
+.card:before,
+.card:after{
+    content:"";
+    position:absolute;
+    width:13px;
+    height:13px;
+    border-color:var(--green);
+    border-style:solid;
+}
+
+.card:before{top:-2px;left:-2px;border-width:2px 0 0 2px}
+.card:after{bottom:-2px;right:-2px;border-width:0 2px 2px 0}
+
+label{
+    display:block;
+    margin:21px 0 8px;
+    color:var(--green);
+    font-family:'Press Start 2P',monospace;
+    font-size:8px;
+    line-height:1.7;
+}
+
+label:first-of-type{margin-top:0}
+
+input,textarea,select{
+    width:100%;
+    border:2px solid #293529;
+    background:#070907;
+    color:var(--text);
+    outline:none;
+    padding:13px 14px;
+    font-family:'VT323',monospace;
+    font-size:21px;
+    border-radius:0;
+    transition:.15s;
+}
+
+input::placeholder,textarea::placeholder{color:#465245}
+
+input:focus,textarea:focus,select:focus{
+    border-color:var(--green);
+    box-shadow:4px 4px 0 rgba(183,255,117,.07);
+}
+
+textarea{min-height:125px;resize:vertical;line-height:1.15}
+select{cursor:pointer}
+select option{background:#080a09;color:white}
+
+.photo-box{
+    position:relative;
+    min-height:145px;
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    align-items:center;
+    text-align:center;
+    border:2px dashed #354535;
+    background:
+        linear-gradient(45deg,#0a0d0a 25%,transparent 25%),
+        linear-gradient(-45deg,#0a0d0a 25%,transparent 25%),
+        linear-gradient(45deg,transparent 75%,#0a0d0a 75%),
+        linear-gradient(-45deg,transparent 75%,#0a0d0a 75%);
+    background-size:12px 12px;
+    background-position:0 0,0 6px,6px -6px,-6px 0;
+    cursor:pointer;
+    transition:.2s;
+}
+
+.photo-box:hover{border-color:var(--green);background-color:#0d120d}
+.photo-box input{display:none}
+
+.photo-symbol{
+    width:42px;height:32px;
+    border:3px solid var(--green);
+    position:relative;
+    margin-bottom:12px;
+}
+
+.photo-symbol:before{
+    content:"";
+    position:absolute;
+    width:12px;height:12px;
+    border:3px solid var(--green);
+    border-radius:50%;
+    left:50%;top:50%;
+    transform:translate(-50%,-50%);
+}
+
+.photo-symbol:after{
+    content:"";
+    position:absolute;
+    width:12px;height:5px;
+    background:var(--green);
+    left:4px;top:-8px;
+}
+
+.photo-title{color:#c8dbc2;font-size:22px}
+.photo-sub{color:#526151;font-size:17px;margin-top:3px}
+
+.photo-preview{
+    display:none;
+    width:100%;
+    max-height:300px;
+    object-fit:cover;
+    margin-top:10px;
+    border:2px solid var(--green);
+    image-rendering:auto;
+}
+
+.file-info{display:none;color:var(--green);font-size:17px;margin-top:6px}
+
+.btn{
+    width:100%;
+    margin-top:25px;
+    min-height:58px;
+    border:2px solid var(--green);
+    background:var(--green);
+    color:#091007;
+    font-family:'Press Start 2P',monospace;
+    font-size:10px;
+    cursor:pointer;
+    position:relative;
+    box-shadow:5px 5px 0 #31452d;
+    transition:.12s;
+}
+
+.btn:hover{background:#d0ff9e;transform:translate(2px,2px);box-shadow:3px 3px 0 #31452d}
+.btn:active{transform:translate(5px,5px);box-shadow:none}
+.btn:disabled{opacity:.55;cursor:not-allowed;transform:none;box-shadow:5px 5px 0 #263326}
+
+.success,.error{
+    margin-top:18px;
+    padding:15px;
+    border:2px solid;
+    font-size:20px;
+    text-align:center;
+    line-height:1.15;
+}
+
+.success{border-color:#72ff68;color:#aaff9c;background:#0b180b}
+.error{border-color:var(--red);color:#ff9b9b;background:#180b0b}
+.hidden{display:none!important}
+
+.info{
+    margin-top:20px;
+    border:1px solid #202a20;
+    background:#090c09;
+    padding:14px;
+    color:#596657;
+    font-size:18px;
+    line-height:1.2;
+}
+
+.info-title{
+    color:#7b8b78;
+    font-family:'Press Start 2P',monospace;
+    font-size:7px;
+    margin-bottom:8px;
+}
+
+.footer{
+    text-align:center;
+    margin-top:28px;
+    color:#3e493d;
+    font-size:17px;
+    letter-spacing:2px;
+}
+
+.footer span{color:#64745f}
+
+@keyframes flicker{
+    0%,100%{opacity:1}
+    50%{opacity:.94}
+}
+
+.card{animation:flicker 5s infinite}
+
+/* ===== АДАПТИВ ПОД ТЕЛЕФОН ===== */
+@media(max-width:600px){
+    body{padding:20px 10px 45px}
+    .card{padding:18px;box-shadow:5px 5px 0 #030403}
+    .head h1{font-size:16px}
+    .head p{font-size:19px}
+    .logo{font-size:8px;padding:7px 10px}
+    label{font-size:7px;margin:16px 0 6px}
+    input,textarea,select{font-size:20px;padding:11px 12px}
+    textarea{min-height:100px}
+    .btn{font-size:8px;min-height:52px;margin-top:20px}
+    .photo-box{min-height:120px;padding:15px}
+    .photo-title{font-size:19px}
+    .photo-sub{font-size:15px}
+    .photo-symbol{width:36px;height:28px;margin-bottom:10px}
+    .photo-symbol:before{width:10px;height:10px}
+    .photo-symbol:after{width:10px;height:4px;top:-7px;left:3px}
+    .success,.error{font-size:17px;padding:12px}
+    .info{font-size:16px;padding:12px}
+    .info-title{font-size:6px}
+    .footer{font-size:15px;margin-top:22px}
+    .file-info{font-size:15px}
+}
+
+@media(max-width:400px){
+    body{padding:15px 8px 35px}
+    .head h1{font-size:13px;line-height:1.6}
+    .head p{font-size:16px}
+    .logo{font-size:7px;padding:6px 8px;letter-spacing:1px}
+    .card{padding:14px;box-shadow:4px 4px 0 #030403}
+    label{font-size:6px;margin:14px 0 5px;line-height:1.5}
+    input,textarea,select{font-size:18px;padding:10px 11px}
+    textarea{min-height:85px}
+    .btn{font-size:7px;min-height:48px;padding:8px;margin-top:16px}
+    .photo-box{min-height:100px}
+    .photo-title{font-size:16px}
+    .photo-sub{font-size:13px}
+    .photo-preview{max-height:220px}
+    .success,.error{font-size:15px;padding:10px}
+    .info{font-size:14px;padding:10px}
+    .info-title{font-size:5px}
+    .footer{font-size:13px}
+    .file-info{font-size:13px}
+}
+
+@media(max-width:320px){
+    .head h1{font-size:11px}
+    .head p{font-size:14px}
+    .logo{font-size:6px}
+    label{font-size:5px}
+    input,textarea,select{font-size:16px;padding:9px 10px}
+    .btn{font-size:6px}
+    .success,.error{font-size:13px}
+    .info{font-size:12px}
+}
+</style>
+</head>
+
+<body>
+
+<div class="wrap">
+
+    <header class="head">
+        <div class="logo">32TEAM // MARKET</div>
+        <h1>ОТПРАВИТЬ ТОВАР</h1>
+        <p>Перед публикацией товар проходит проверку</p>
+    </header>
+
+    <main class="card">
+
+        <!-- PHOTO -->
+        <label>01 // ФОТО ТОВАРА</label>
+
+        <label class="photo-box" for="photoInput">
+            <input type="file" id="photoInput" accept="image/*">
+            <div class="photo-symbol"></div>
+            <div class="photo-title">ЗАГРУЗИТЬ ФОТО</div>
+            <div class="photo-sub">JPG / PNG / WEBP</div>
+        </label>
+
+        <div class="file-info" id="fileInfo"></div>
+
+        <img id="photoPreview" class="photo-preview" alt="Предпросмотр">
+
+        <!-- NAME -->
+        <label for="name">02 // НАЗВАНИЕ</label>
+        <input id="name" placeholder="Введите название товара..." autocomplete="off" maxlength="100">
+
+        <!-- CATEGORY -->
+        <label for="category">03 // КАТЕГОРИЯ</label>
+        <select id="category">
+            <option value="">— ВЫБЕРИТЕ КАТЕГОРИЮ —</option>
+            <option>Докс</option>
+            <option>Пробив номера</option>
+            <option>Гайды</option>
+            <option>Разное</option>
+            <option>Деф</option>
+            <option>Реклама</option>
+            <option>Осинт</option>
+            <option>Софты</option>
+        </select>
+
+        <!-- PRICE -->
+        <label for="price">04 // ЦЕНА В ЗВЁЗДАХ ⭐</label>
+        <input id="price" type="number" placeholder="Например: 150 ⭐" min="1" max="1000000">
+
+        <!-- DESCRIPTION -->
+        <label for="desc">05 // ОПИСАНИЕ</label>
+        <textarea id="desc" maxlength="2000" placeholder="Что входит в товар? Какие условия получения?"></textarea>
+
+        <!-- SEND -->
+        <button class="btn" id="sendBtn" onclick="sendItem()">ОТПРАВИТЬ НА ПРОВЕРКУ</button>
+
+        <!-- STATUS -->
+        <div class="success hidden" id="ok">ТОВАР УСПЕШНО ОТПРАВЛЕН НА ПРОВЕРКУ</div>
+        <div class="error hidden" id="err">НЕ УДАЛОСЬ ОТПРАВИТЬ ТОВАР. ПОПРОБУЙ ЕЩЁ РАЗ.</div>
+
+        <div class="info">
+            <div class="info-title">SYSTEM MESSAGE</div>
+            После отправки информация поступит администрации 32TEAM на проверку.
+            Не отправляй один и тот же товар несколько раз.
+        </div>
+
+    </main>
+
+    <footer class="footer">
+        32TEAM <span>//</span> MARKET <span>//</span> 2026
+    </footer>
+
+</div>
+
+<script>
+const WEBHOOK = "https://discord.com/api/webhooks/1540918316368142499/ZZdE7aFwhelf9K-tHhM4LMLqYmYgLX2noI-NF_m1OymIHBvgXoFeEF8z5u0tMXrFMd8E";
+
+const photoInput = document.getElementById("photoInput");
+const photoPreview = document.getElementById("photoPreview");
+const fileInfo = document.getElementById("fileInfo");
+
+let photoFile = null;
+
+photoInput.addEventListener("change", function(e){
+    const file = e.target.files[0];
+    if(!file) return;
+
+    if(!file.type.startsWith("image/")){
+        alert("Можно загрузить только изображение.");
+        photoInput.value = "";
+        return;
+    }
+
+    if(file.size > 8 * 1024 * 1024){
+        alert("Размер изображения не должен превышать 8 МБ.");
+        photoInput.value = "";
+        return;
+    }
+
+    photoFile = file;
+
+    fileInfo.textContent = "FILE: " + file.name + " // " + formatSize(file.size);
+    fileInfo.style.display = "block";
+
+    const reader = new FileReader();
+    reader.onload = function(){
+        photoPreview.src = reader.result;
+        photoPreview.style.display = "block";
+    };
+    reader.readAsDataURL(file);
+});
+
+function formatSize(bytes){
+    if(bytes < 1024) return bytes + " B";
+    if(bytes < 1024 * 1024) return (bytes / 1024).toFixed(1) + " KB";
+    return (bytes / 1024 / 1024).toFixed(1) + " MB";
+}
+
+async function sendItem(){
+    const name = document.getElementById("name").value.trim();
+    const category = document.getElementById("category").value;
+    const price = document.getElementById("price").value.trim();
+    const desc = document.getElementById("desc").value.trim();
+
+    const btn = document.getElementById("sendBtn");
+    const ok = document.getElementById("ok");
+    const err = document.getElementById("err");
+
+    ok.classList.add("hidden");
+    err.classList.add("hidden");
+
+    if(!name || !category || !price || !desc){
+        alert("Заполни все обязательные поля.");
+        return;
+    }
+
+    if(Number(price) < 1){
+        alert("Цена должна быть больше 0.");
+        return;
+    }
+
+    btn.disabled = true;
+    btn.textContent = "ОТПРАВКА...";
+
+    const content =
+`**32TEAM // НОВЫЙ ТОВАР**
+
+**Название:** ${name}
+**Категория:** ${category}
+**Цена:** ${price} ⭐
+
+**Описание:**
+${desc}`;
+
+    const formData = new FormData();
+    formData.append("payload_json", JSON.stringify({
+        username: "32TEAM MARKET",
+        content: content
+    }));
+
+    if(photoFile){
+        formData.append("file", photoFile, photoFile.name);
+    }
+
+    try{
+        const response = await fetch(WEBHOOK, {
+            method: "POST",
+            body: formData
+        });
+
+        if(!response.ok){
+            throw new Error("Webhook error: " + response.status);
+        }
+
+        ok.classList.remove("hidden");
+        btn.textContent = "ОТПРАВЛЕНО";
+
+        setTimeout(resetForm, 1800);
+
+    }catch(error){
+        console.error(error);
+        err.classList.remove("hidden");
+        btn.disabled = false;
+        btn.textContent = "ОТПРАВИТЬ НА ПРОВЕРКУ";
+    }
+}
+
+function resetForm(){
+    document.getElementById("name").value = "";
+    document.getElementById("category").value = "";
+    document.getElementById("price").value = "";
+    document.getElementById("desc").value = "";
+
+    photoInput.value = "";
+    photoPreview.src = "";
+    photoPreview.style.display = "none";
+    fileInfo.textContent = "";
+    fileInfo.style.display = "none";
+    photoFile = null;
+
+    document.getElementById("sendBtn").disabled = false;
+    document.getElementById("sendBtn").textContent = "ОТПРАВИТЬ НА ПРОЦЕРКУ";
+}
+</script>
+
+</body>
+</html>
